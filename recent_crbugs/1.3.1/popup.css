@@ -1,0 +1,42 @@
+.table tbody tr td {
+	vertical-align: middle;
+}
+
+.table tbody tr td.crbug-id {
+	width: 60px;
+}
+
+.table tbody tr td.crbug-copy {
+	width: 30px;
+	padding: 0px;
+}
+
+.table tbody tr td.crbug-title {
+	width: 540px;
+	max-width: 540px;
+}
+
+.main-div {
+	width: 650px;
+}
+
+.search-div {
+	width: 100%;
+	display: table;
+}
+
+.search-text-span {
+	width: 100%;
+	display: table-cell;
+	vertical-align: middle;	
+}
+
+.search-text {
+	width: 100%;
+	vertical-align: middle;
+}
+
+.search-button {
+	display: table-cell;
+	vertical-align: middle;	
+}

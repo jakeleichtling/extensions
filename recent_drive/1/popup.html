@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html ng-app='popup'>
+	<head>
+		<link rel="stylesheet" type="text/css" href="bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="popup.css" />
+		<link rel="stylesheet" type="text/css" href="angular-csp.css" />		
+	</head>
+	<body ng-controller="PopupController as popup">
+		<script type="text/javascript" src="angular.js"></script>
+		<script type="text/javascript" src="jquery-1.11.3.js"></script>
+		<script type="text/javascript" src="bootstrap.js"></script>
+		<script type="text/javascript" src="popup.js"></script>
+
+		<div class="main-div">
+			<div class="search-div">
+				<span class="search-text-span"><input id="search-text-field" type="text" class="form-control search-text" placeholder="Search all visited..." ng-model="searchText"></span>
+				<button id="search-crbug-button" ng-show="searchText.length > 0;" type="button" class="btn btn-default search-button btn-primary" ng-click="searchCrbug()">Search crbug.com</button>				
+			</div>
+			<table class="table table-hover">
+				<tr valign="middle" ng-repeat="crbug in getFilteredCrbugArray() | orderBy:'-lastVisited'" class="clickable-row">
+					<td ng-click="openCrbugLink(crbug)" class="crbug-id">{{crbug.id}}</td>
+					<td ng-click="openCrbugLink(crbug)" class="crbug-title"><b>{{getCrbugTitleString(crbug)}}</b></td>
+					<td class="crbug-copy"><button type="button" class="btn btn-default btn-sm copy-url-button" crbug-url="{{getCrbugUrl(crbug)}}" ng-click="setClickedCrbugUrlAndCopyEvent(crbug)"><span class="glyphicon glyphicon-copy"></span></button></td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>
