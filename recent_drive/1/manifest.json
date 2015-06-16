@@ -1,22 +1,21 @@
 {
    "background": {
-      "persistent": true,
+      "persistent": false,
       "scripts": [ "bg.js" ]
    },
    "browser_action": {
       "default_popup": "popup.html",
       "default_title": ""
    },
-   "description": "Quickly access crbugs you have recently viewed.",
+   "description": "Quickly access Drive items you have recently viewed.",
    "icons": {
       "128": "icon128.png",
       "16": "icon16.png",
       "48": "icon48.png"
    },
-   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhoxY3FR6jm1Ll3cwtQtuGcGH5s6ZLrFR0trdSwOfKW2x5Y+ZXrDxV/2d0RSjJ5RNpNOxTFzo3CPYqLCy6oI9+IhDUShn28AF2xlSt+kqUZUt4D7z/Hw9hUtwKLuSHTQDXEb2Rn52ysG7l58LMVl75phi+VHVzoaReXcAsRgJ2+t9tSgWW5yz1s0Ddm2sJsTL2uf+LZiqpxybYSYH6fyoSE08XXRprfa0bVmGNBzJXraqjX1l+mMQzQTY0Zp0I83HEOqg2lLZu57fvHSFlQaRMYdE2vWyOxNScz3FMqNM5eyKdS4fDBI6qJWgVVJppFJjI7yr1oIM3tdwuyh31lnQswIDAQAB",
    "manifest_version": 2,
-   "name": "Recent Crbugs",
-   "permissions": [ "webNavigation", "storage", "clipboardWrite", "https://code.google.com/*" ],
+   "name": "Recent Drive",
+   "permissions": [ "webNavigation", "storage", "clipboardWrite", "https://docs.google.com/*" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.3.1"
+   "version": "1"
 }

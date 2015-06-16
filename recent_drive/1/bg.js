@@ -1,9 +1,5 @@
-function getCrbugUrl() {
-	return "https://code.google.com/p/chromium/issues/detail";
-}
-
 var filters = {
-	url: [{urlContains: getCrbugUrl().replace(/^https?\:\/\//, '')}]
+	url: [{urlContains: "docs.google.com"}]
 }
 
 function saveCrbug(crbug, id) {
@@ -24,7 +20,6 @@ function saveCrbug(crbug, id) {
 function updateCrbug(crbug, id, title) {
 	console.log('updateCrbug');
 
-	// TODO: actually scrape title
 	crbug.id = id;
 	crbug.title = title;
 	crbug.visitCount = crbug.visitCount + 1;
@@ -59,17 +54,34 @@ function onNavigate(details) {
 	console.log('onNavigate');
 
 	// Extract the ID
-	var regExpString = getCrbugUrl() + "\\?.*id=(\\d+).*";
-	var regExp = new RegExp(regExpString);
+	var regExps = [
+		/https:\/\/docs.google.com.*\/document\/d\/(.*?)($|\/$|\/.*$)/,
+		/https:\/\/docs.google.com.*\/spreadsheets\/d\/(.*?)($|\/$|\/.*$)/,
+		/https:\/\/docs.google.com.*\/presentation\/d\/(.*?)($|\/$|\/.*$)/
+	]
 
 	var url = details.url;
-	var matches = url.match(regExp);
-	console.log(matches)
-
+	var matches = false;
 	var id;
-	if (matches && matches.length >= 2) {
-		id = matches[1]
-	} else {
+	for (var i = 0; i < regExps.length; i++) {
+		var regExp = regExps[i];
+		if (regExp.test(url)) {
+			matches = true;
+			var matchedGroups = url.match(regExp);
+			id = matchedGroups[1];
+
+			console.log("Matched regex:");
+			console.log("  url: " + url);
+			console.log("  regExp: " + regExp);
+			console.log("  id: " + id);
+
+			break;
+		}
+	}
+
+	if (!matches) {
+		console.log("Did not match");
+		console.log("  url: " + url);
 		return;
 	}
 
@@ -79,23 +91,23 @@ function onNavigate(details) {
 
 		// Extract the title and get result on callback
 		console.log('Sending message from BG to CS');
-		chrome.tabs.sendMessage(details.tabId, {method:'getCrbugTitle'}, {}, function(response) {
+		chrome.tabs.sendMessage(details.tabId, {method:'getItemTitle'}, {}, function(response) {
 			console.log('Message received by BG script:');
 			console.log(response);
 
 			if (response && response.title) {
 				var title = response.title;
 
-				// Try to retrieve the crbug with the ID
+				// Try to retrieve the item with the ID
 				chrome.storage.sync.get(id, function(items) {
-					retrieveCrbug(items, id, title);
+					retrieveItem(items, id, title);
 				});
 			}
 		});
 	});
 }
 
-chrome.webNavigation.onDOMContentLoaded.addListener(onNavigate, filters);
+chrome.webNavigation.onCompleted.addListener(onNavigate, filters);
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log('Mesage received by background page.')
