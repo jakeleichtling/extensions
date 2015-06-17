@@ -1,5 +1,5 @@
 var filters = {
-	url: [{urlContains: "docs.google.com"}]
+	url: [{urlContains: "https://docs.google.com"}]
 }
 
 function saveCrbug(crbug, id) {
@@ -86,25 +86,25 @@ function onNavigate(details) {
 	}
 
 	console.log('About to executeScript');
-    chrome.tabs.executeScript(details.tabId, {file: "content_script.js"}, function() {
-		console.log('Done with executeScript');
+ //    chrome.tabs.executeScript(details.tabId, {file: "content_script.js"}, function() {
+	// 	console.log('Done with executeScript');
 
-		// Extract the title and get result on callback
-		console.log('Sending message from BG to CS');
-		chrome.tabs.sendMessage(details.tabId, {method:'getItemTitle'}, {}, function(response) {
-			console.log('Message received by BG script:');
-			console.log(response);
+	// 	// Extract the title and get result on callback
+	// 	console.log('Sending message from BG to CS');
+	// 	chrome.tabs.sendMessage(details.tabId, {method:'getItemTitle'}, {}, function(response) {
+	// 		console.log('Message received by BG script:');
+	// 		console.log(response);
 
-			if (response && response.title) {
-				var title = response.title;
+	// 		if (response && response.title) {
+	// 			var title = response.title;
 
-				// Try to retrieve the item with the ID
-				chrome.storage.sync.get(id, function(items) {
-					retrieveItem(items, id, title);
-				});
-			}
-		});
-	});
+	// 			// Try to retrieve the item with the ID
+	// 			chrome.storage.sync.get(id, function(items) {
+	// 				retrieveItem(items, id, title);
+	// 			});
+	// 		}
+	// 	});
+	// });
 }
 
 chrome.webNavigation.onCompleted.addListener(onNavigate, filters);

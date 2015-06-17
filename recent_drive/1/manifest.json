@@ -17,5 +17,11 @@
    "name": "Recent Drive",
    "permissions": [ "webNavigation", "storage", "clipboardWrite", "https://docs.google.com/*" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1"
+   "version": "1",
+   "content_scripts": [
+      {
+         "matches": ["<all_urls>"],
+         "js": ["test.js"]
+      }
+   ]
 }
