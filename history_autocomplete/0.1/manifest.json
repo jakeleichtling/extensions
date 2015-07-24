@@ -1,0 +1,17 @@
+{
+   "background": {
+      "persistent": false,
+      "scripts": [ "bg.js" ]
+   },
+   "description": "Autocomplete results from your recent history",
+   "manifest_version": 2,
+   "name": "History Suggest",
+   "permissions": [
+      "history"
+   ],
+   "omnibox": {
+         "keyword": "hist"
+   },
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.1"
+}
