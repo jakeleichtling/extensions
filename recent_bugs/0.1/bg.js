@@ -1,16 +1,12 @@
-function getCrbugUrl() {
-	return "https://code.google.com/p/chromium/issues/detail";
+function getBugUrl() {
+	return "https://buganizer.corp.google.com/u/0/issues/";
 }
 
-var filters = {
-	url: [{urlContains: getCrbugUrl().replace(/^https?\:\/\//, '')}]
-}
-
-function saveCrbug(crbug, id) {
-	console.log('saveCrbug');
+function saveBug(bug, id) {
+	console.log('saveBug');
 
 	var keyVal = {};
-	keyVal[id] = crbug;
+	keyVal[id] = bug;
 
 	chrome.storage.sync.set(keyVal, function() {
 		if (chrome.runtime.lastError) {
@@ -21,48 +17,46 @@ function saveCrbug(crbug, id) {
 	});
 }
 
-function updateCrbug(crbug, id, title) {
-	console.log('updateCrbug');
+function updateBug(bug, id, title) {
+	console.log('updateBug');
 
-	// TODO: actually scrape title
-	crbug.id = id;
-	crbug.title = title;
-	crbug.visitCount = crbug.visitCount + 1;
-	crbug.lastVisited = new Date().getTime();
+	bug.id = id;
+	bug.title = title;
+	bug.visitCount = bug.visitCount + 1;
+	bug.lastVisited = new Date().getTime();
 
-	saveCrbug(crbug, id);
+	saveBug(bug, id);
 }
 
-function addCrbug(id, title) {
-	console.log('addCrbug');
+function addBug(id, title) {
+	console.log('addBug');
 
-	var crbug = {
+	var bug = {
 		visitCount: 0
 	};
 
-	updateCrbug(crbug, id, title);
+	updateBug(bug, id, title);
 }
 
-function retrieveCrbug(items, id, title) {
-	console.log('retrieveCrbug');
+function retrieveBug(items, id, title) {
+	console.log('retrieveBug');
 
 	if (items[id]) {
-		// Update the existing crbug
-		updateCrbug(items[id], id, title);
+		// Update the existing bug
+		updateBug(items[id], id, title);
 	} else {
-		// Add a new crbug
-		addCrbug(id, title);
+		// Add a new bug
+		addBug(id, title);
 	}
 }
 
-function onNavigate(details) {
-	console.log('onNavigate');
+function executeOnBugPage(url, tabId) {
+	console.log('executeOnBugPage');
 
 	// Extract the ID
-	var regExpString = getCrbugUrl() + "\\?.*id=(\\d+).*";
+	var regExpString = getBugUrl() + "\/*(\\d+)\/*$";
 	var regExp = new RegExp(regExpString);
 
-	var url = details.url;
 	var matches = url.match(regExp);
 	console.log(matches)
 
@@ -74,35 +68,41 @@ function onNavigate(details) {
 	}
 
 	console.log('About to executeScript');
-    chrome.tabs.executeScript(details.tabId, {file: "content_script.js"}, function() {
+    chrome.tabs.executeScript(tabId, {file: "content_script.js"}, function() {
 		console.log('Done with executeScript');
 
 		// Extract the title and get result on callback
 		console.log('Sending message from BG to CS');
-		chrome.tabs.sendMessage(details.tabId, {method:'getCrbugTitle'}, {}, function(response) {
+		chrome.tabs.sendMessage(tabId, {method:'getBugTitle'}, {}, function(response) {
 			console.log('Message received by BG script:');
 			console.log(response);
 
 			if (response && response.title) {
 				var title = response.title;
 
-				// Try to retrieve the crbug with the ID
+				// Try to retrieve the bug with the ID
 				chrome.storage.sync.get(id, function(items) {
-					retrieveCrbug(items, id, title);
+					retrieveBug(items, id, title);
 				});
 			}
 		});
 	});
 }
 
-chrome.webNavigation.onDOMContentLoaded.addListener(onNavigate, filters);
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+	console.log("onUpdated");
+
+	if (tab.url && changeInfo.status === "complete") {
+		executeOnBugPage(tab.url, tab.id);
+	}
+});
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log('Mesage received by background page.')
     console.log(request);
 
-    if (request.method == "copyCrbugUrl") {
-    	var crbugUrl = request.url;
+    if (request.method === "copyBugUrl") {
+    	var bugUrl = request.url;
 
     	// Find the temp textfield or create one
     	var cpyTmp = document.getElementById('cpy-tmp');
@@ -113,7 +113,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     		cpyTmp.type = "text";
     	}
 
-		cpyTmp.value = crbugUrl;
+		cpyTmp.value = bugUrl;
 		cpyTmp.select()
 		document.execCommand('copy');
     }

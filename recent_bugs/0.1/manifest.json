@@ -1,0 +1,21 @@
+{
+   "background": {
+      "persistent": true,
+      "scripts": [ "bg.js" ]
+   },
+   "browser_action": {
+      "default_popup": "popup.html",
+      "default_title": ""
+   },
+   "description": "Quickly access bugs you have recently viewed.",
+   "icons": {
+      "128": "icon128.png",
+      "16": "icon16.png",
+      "48": "icon48.png"
+   },
+   "manifest_version": 2,
+   "name": "Recent Bugs",
+   "permissions": [ "tabs", "webNavigation", "storage", "clipboardWrite", "https://buganizer.corp.google.com/*" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.1"
+}
