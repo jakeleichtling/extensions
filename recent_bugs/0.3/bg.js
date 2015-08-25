@@ -52,8 +52,8 @@ function executeOnBugPage(url, tabId) {
 	// Extract the ID
 	var regExps = [];
 
-	regExps.push(new RegExp("https://buganizer.corp.google.com/u/0/issues/" + "\/*(\\d+)\/*$"));
-	regExps.push(new RegExp("https://b.corp.google.com/u/0/issues/" + "\/*(\\d+)\/*$"));
+	regExps.push(new RegExp("https://buganizer.corp.google.com/(?:.*/)*issues/" + "\/*(\\d+)\/*$"));
+	regExps.push(new RegExp("https://b.corp.google.com/(?:.*/)*issues/" + "\/*(\\d+)\/*$"));
 
 	console.log(regExps);
 

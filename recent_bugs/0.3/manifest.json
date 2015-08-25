@@ -17,5 +17,5 @@
    "name": "Recent Bugs",
    "permissions": [ "tabs", "webNavigation", "storage", "clipboardWrite", "https://buganizer.corp.google.com/*", "https://b.corp.google.com/*" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.2"
+   "version": "0.3"
 }
